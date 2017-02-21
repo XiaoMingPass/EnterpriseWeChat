@@ -1,0 +1,46 @@
+##########mysql propertity########################
+db.ip=127.0.0.1
+db.name=yasha_mobile
+db.port=3306
+db.user=system
+db.pwd=!@#$56789
+
+####user manager url############
+mhome.manager.url=http://127.0.0.1:8080/wx-manager
+################ boot server path ################
+boot.path=http://127.0.0.1:808
+#web host
+mhome.wx=http://www.wx.net
+ehr_db_service_ip=127.0.0.1
+#ehr_db_service_ip = 127.0.0.1
+
+linux_cvs_file_path=/wx/file
+win_cvs_file_path=D:/weinxinserver/cvs/
+###########################WX config###################################
+
+#erlonghu
+#wx_corp_id=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+#wx_secret=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+###########################redis config###################################
+redis.host=127.0.0.1
+redis.password=1234567890
+redis.port=6379
+redis.timeout=6000
+
+################ dubboregistcenter ################
+dubbo.registry.address =127.0.0.1:2181 
+dubbo.home = /etc/dubbo/wx
+
+################ static server path ################
+static.server=http://127.0.0.1
+static.var=1.1.0
+
+################ ftp #############
+ftp.ip=10.10.20.204
+ftp.username=wen
+ftp.password=wen1
+ftp.port=21
+ftp.host=http://127.0.0.1
+
