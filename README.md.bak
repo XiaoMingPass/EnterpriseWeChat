@@ -54,7 +54,7 @@ CREATE TABLE `tbl_wx_syn_data_record` (
    PRIMARY KEY (`id`)
  ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='数据同步记录表'
  
- 日常从外部数据拉取数据是增量方式（调度任务），在此工程外部数据的场景是每天从其他系统根据时间拉取数据，本次开始时间(start_time)即上次的结束时间(end_time)。
+ 从外部数据拉取数据是增量方式，在此工程外部数据的场景是每天从其他系统根据时间拉取数据，本次开始时间(start_time)即上次的结束时间(end_time)。
  
 二、第二期
 * 数据自动同步，并清理已离职人员
