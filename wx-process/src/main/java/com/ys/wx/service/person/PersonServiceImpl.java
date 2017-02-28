@@ -1,14 +1,5 @@
 package com.ys.wx.service.person;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.log4j.Logger;
-import org.springframework.stereotype.Service;
-
 import com.ys.wx.model.person.PersonalForImport;
 import com.ys.wx.model.person.PersonalWraper;
 import com.ys.wx.service.deptandperson.IQueryInfoWXService;
@@ -16,13 +7,22 @@ import com.ys.wx.service.deptandperson.IQueryInfoWXServicePortType;
 import com.ys.wx.utils.CommUtils;
 import com.ys.wx.utils.XStreamUtil;
 import com.ys.wx.vo.ReturnVo;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * 人员数据拉取实 现
- * @author wangzequan
- *@Copyright:Copyright (c) 二龙湖基地组织  2015 ~ 2016 版权所有
+ * Title : 人员数据拉取实现
+ * Description :
+ * Author : Ceaser wang Jerry xu    date : 2017/1/12
+ * Update :                         date :
+ * Version : 1.0.0
+ * Copyright (c) 二龙湖基地组织  2016 ~ 2017 版权所有
  */
-
 @Service
 public class PersonServiceImpl implements IPersonService {
 
@@ -67,42 +67,41 @@ public class PersonServiceImpl implements IPersonService {
         return XStreamUtil.toBean(s, PersonalWraper.class);
     }
 
-    
-    
+
     public ReturnVo<List<PersonalForImport>> getEHRPersonalData(int page) throws Exception {
         logger.info(">>>>>>>>>>>>>开始获取人员信息数据>>>>>>>>>>>>>\n");
         ReturnVo<List<PersonalForImport>> rVo = new ReturnVo<List<PersonalForImport>>(0, "失败");
         List<PersonalForImport> list = new ArrayList<PersonalForImport>();
-	    PersonalWraper personal = getEHRPersonalDataByPage(page);
-	    list.addAll(personal.getPersonals());
+        PersonalWraper personal = getEHRPersonalDataByPage(page);
+        list.addAll(personal.getPersonals());
         rVo.setData(list);
         rVo.setCode(1);
         rVo.setMsg("成功");
         return rVo;
     }
-    
-    
-    
-    public  ReturnVo<List<PersonalForImport>> getEHRPersonalDataByTime(String  time) throws Exception {
-    	 ReturnVo<List<PersonalForImport>> rVo = new ReturnVo<List<PersonalForImport>>(0, "失败");
+
+
+    public ReturnVo<List<PersonalForImport>> getEHRPersonalDataByTime(String time) throws Exception {
+        ReturnVo<List<PersonalForImport>> rVo = new ReturnVo<List<PersonalForImport>>(0, "失败");
         IQueryInfoWXServicePortType type = iQueryInfowxService.getIQueryInfoWXServiceSOAP11PortHttp();
         //String dateStr = "1970-01 00:00:00";
 //        String s = type.getPsndocsByTime(dateStr, pageIndex);
         //getPsndocsByTimeAndStatusWX(时间字符串，默认值为0，第几页的数据)[该方法，默认每次打印500条数据，且页数是从0开始计数]
-        int pageindex= 0;
-        String s = type.getPsndocsByTimeAndStatusWX(time, 0, pageindex);
-        PersonalWraper personalwraper =  XStreamUtil.toBean(s, PersonalWraper.class);
-        if(null!=personalwraper && null!=personalwraper.getPersonals() && personalwraper.getPersonals().size()==500){
-        	String s1   = type.getPsndocsByTimeAndStatusWX(time, 0, pageindex++);
-        	if(CommUtils.isNotEmpty(s1) ){
-        		PersonalWraper personalwraper1 =  XStreamUtil.toBean(s1, PersonalWraper.class);
-        		if(null!=personalwraper1 && CollectionUtils.isNotEmpty(personalwraper1.getPersonals()) ){
-        			personalwraper.getPersonals().addAll(personalwraper1.getPersonals());
-        		}
-        	}
+        int pageIndex = 0;
+        String s = type.getPsndocsByTimeAndStatusWX(time, 0, pageIndex);
+        PersonalWraper personalwraper = XStreamUtil.toBean(s, PersonalWraper.class);
+        if (null != personalwraper && null != personalwraper.getPersonals() && personalwraper.getPersonals().size() == 500) {
+            String s1 = type.getPsndocsByTimeAndStatusWX(time, 0, pageIndex++);
+            if (CommUtils.isNotEmpty(s1)) {
+                PersonalWraper personalWraperTwo = XStreamUtil.toBean(s1, PersonalWraper.class);
+                if (null != personalWraperTwo && CollectionUtils.isNotEmpty(personalWraperTwo.getPersonals())) {
+                    personalwraper.getPersonals().addAll(personalWraperTwo.getPersonals());
+                }
+            }
         }
+        assert personalwraper != null;
         rVo.setData(personalwraper.getPersonals());
         return rVo;
     }
-    
+
 }

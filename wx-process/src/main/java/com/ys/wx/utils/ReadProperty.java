@@ -3,28 +3,30 @@ package com.ys.wx.utils;
 import com.ys.wx.common.DecryptPropertyPlaceholderConfigurer;
 
 /**
- * 读取配置文件 application.property
- * @Author:Bruce.Liu
- * @Since:2014年6月4日
- * @Version:1.1.0 浙江蘑菇加电子商务有限公司 2015 ~ 2016 版权所有
+ * Title : 读取配置文件application.property
+ * Description :
+ * Author : Bruce.liu    date : 2015年1月24日
+ * Update :              date :
+ * Version : 1.0.0
+ * Copyright (c) 二龙湖基地组织  2016 ~ 2017 版权所有
  */
 public class ReadProperty {
 
-	public DecryptPropertyPlaceholderConfigurer dppc;
+    public DecryptPropertyPlaceholderConfigurer dppc;
 
-	/**
-	 * 读取配置文件的内容
-	 * 
-	 * @param key
-	 * @return value
-	 */
-	public String getValue(String key) {
-		return dppc.getValue(key);
-	}
+    /**
+     * 读取配置文件的内容
+     *
+     * @param key
+     * @return value
+     */
+    public String getValue(String key) {
+        return dppc.getValue(key);
+    }
 
-	public void setDppc(DecryptPropertyPlaceholderConfigurer dppc) {
-		this.dppc = dppc;
-	}
-	
-	
+    public void setDppc(DecryptPropertyPlaceholderConfigurer dppc) {
+        this.dppc = dppc;
+    }
+
+
 }

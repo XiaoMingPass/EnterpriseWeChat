@@ -1,17 +1,6 @@
 package com.ys.wx.function;
 
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.apache.log4j.Logger;
-import org.springframework.stereotype.Service;
-
 import com.ys.wx.common.SpringContextHolder;
 import com.ys.wx.model.dept.DepartmentForImport;
 import com.ys.wx.model.person.PersonalForImport;
@@ -24,6 +13,15 @@ import com.ys.wx.utils.ReadProperty;
 import com.ys.wx.utils.StringUtils;
 import com.ys.wx.utils.ToCSVUtils;
 import com.ys.wx.vo.ReturnVo;
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Title : 生成CSV报表
@@ -31,12 +29,12 @@ import com.ys.wx.vo.ReturnVo;
  * Author : Jerry xu    date : 2017/1/11
  * Update :             date :
  * Version : 1.0.0
- * @Copyright:Copyright (c) 二龙湖基地组织  2015 ~ 2016 版权所有
+ * Copyright (c) 二龙湖基地组织  2015 ~ 2016 版权所有
  */
 @Service
 public class DataToCSVFile {
 
-    private static final Logger logger = Logger.getLogger(DataToCSVFile.class);
+    private static final Logger       logger       = Logger.getLogger(DataToCSVFile.class);
     private final static ReadProperty readProperty = SpringContextHolder.getBean("readProperty");
     @Resource
     private IWxServiceClient wxServiceClient;
@@ -51,7 +49,6 @@ public class DataToCSVFile {
     /**
      * 生成CSV报表
      */
-    @Deprecated
     public void DataToCSV() {
         try {
             //清除前置文件
@@ -93,16 +90,16 @@ public class DataToCSVFile {
                 Map<String, String> row = new LinkedHashMap<String, String>();
                 row.put("1", (StringUtils.replaceBlank(dept.getDept_name()).equals("")
                         || StringUtils.replaceBlank(dept.getDept_name()) == null) ? "" : StringUtils.replaceBlank(dept.getDept_name()));
-                
+
                 row.put("2", (StringUtils.replaceBlank(dept.getDept_id()).equals("")
                         || StringUtils.replaceBlank(dept.getDept_id()) == null) ? "" : StringUtils.replaceBlank(dept.getDept_id()));
-                
+
                 row.put("3", (StringUtils.replaceBlank(dept.getDept_fid()).equals("")
                         || StringUtils.replaceBlank(dept.getDept_fid()) == null) ? "" : StringUtils.replaceBlank(dept.getDept_fid()));
-                
+
                 row.put("4", (StringUtils.replaceBlank(dept.getDept_order()).equals("")
                         || StringUtils.replaceBlank(dept.getDept_order()) == null) ? "" : StringUtils.replaceBlank(dept.getDept_order()));
-                
+
                 exportData.add(row);
             }
         }
@@ -112,7 +109,7 @@ public class DataToCSVFile {
         map.put("2", "部门ID");
         map.put("3", "父部门ID");
         map.put("4", "排序");
-        
+
         //存储文件名称
         String fileName = "party";
         //获取到存储文件路径
@@ -122,8 +119,8 @@ public class DataToCSVFile {
         logger.info(">>>>>>>>>>>>>>【完成】组装party报表>>>>>>>>>>>>");
         return file;
     }
-    
-    
+
+
     /**
      * 生成用户CSV报表
      */
@@ -142,7 +139,7 @@ public class DataToCSVFile {
                     row.put("2", (StringUtils.replaceBlank(person.getPsn_id()).equals("")
                             || StringUtils.replaceBlank(person.getPsn_id()) == null) ? "" : StringUtils.replaceBlank(person.getPsn_id()));
                     row.put("3", "");
-                    row.put("4", CommUtils.defaultIfEmpty(person.getWeixinid(), "") );//weixinno
+                    row.put("4", CommUtils.defaultIfEmpty(person.getWeixinid(), ""));//weixinno
                     row.put("5", (StringUtils.replaceBlank(person.getPsn_mobile()).equals("")
                             || StringUtils.replaceBlank(person.getPsn_mobile()) == null) ? "" : StringUtils.replaceBlank(person.getPsn_mobile()));
                     row.put("6", (StringUtils.replaceBlank(person.getPsn_email()).equals("")
@@ -151,18 +148,18 @@ public class DataToCSVFile {
                             || StringUtils.replaceBlank(person.getPsn_deptcode()) == null) ? "" : StringUtils.replaceBlank(person.getPsn_deptcode()));
                     row.put("8", (StringUtils.replaceBlank(person.getPsn_postname()).equals("")
                             || StringUtils.replaceBlank(person.getPsn_postname()) == null) ? "" : StringUtils.replaceBlank(person.getPsn_postname()));
-                    
-                    row.put("9", CommUtils.defaultIfEmpty(person.getLocaloffice(),""));//所在办公地
-                    row.put("10", CommUtils.defaultIfEmpty(person.getFullName(),"")); //全称
-                    row.put("11", CommUtils.defaultIfEmpty(person.getShortName(),"")); //简称
-                    row.put("12", person.getOrderNo()+""); //排序号
-                    row.put("13", CommUtils.defaultIfEmpty(person.getIsvisible(),"")); //是否可见
+
+                    row.put("9", CommUtils.defaultIfEmpty(person.getLocaloffice(), ""));//所在办公地
+                    row.put("10", CommUtils.defaultIfEmpty(person.getFullName(), "")); //全称
+                    row.put("11", CommUtils.defaultIfEmpty(person.getShortName(), "")); //简称
+                    row.put("12", person.getOrderNo() + ""); //排序号
+                    row.put("13", CommUtils.defaultIfEmpty(person.getIsvisible(), "")); //是否可见
                     row.put("14", (StringUtils.replaceBlank(person.getPsn_officephone()).equals("")
                             || StringUtils.replaceBlank(person.getPsn_officephone()) == null) ? "" : StringUtils.replaceBlank(person.getPsn_officephone()));
-                    row.put("15", CommUtils.defaultIfEmpty(person.getPhoneShort(),"")); // 座机短号
+                    row.put("15", CommUtils.defaultIfEmpty(person.getPhoneShort(), "")); // 座机短号
                     row.put("16", (StringUtils.replaceBlank(person.getPsn_code()).equals("")
                             || StringUtils.replaceBlank(person.getPsn_code()) == null) ? "" : StringUtils.replaceBlank(person.getPsn_code()));
-                    row.put("17", CommUtils.defaultIfEmpty(person.getMobileShortNo(),"")); //手机短号
+                    row.put("17", CommUtils.defaultIfEmpty(person.getMobileShortNo(), "")); //手机短号
                     exportData.add(row);
                 }
             }
@@ -201,7 +198,7 @@ public class DataToCSVFile {
      * 清除前置文件
      * 将系统中的临时文件清除
      */
-    public void preCleanFiles() {
+    private void preCleanFiles() {
         String path = storageFilePath();
         File filePath = new File(path);
         if (!filePath.exists()) {
@@ -219,8 +216,6 @@ public class DataToCSVFile {
 
     /**
      * 存储文件路径
-     *
-     * @return
      */
     private String storageFilePath() {
         String linuxPath = readProperty.getValue("linux_cvs_file_path");

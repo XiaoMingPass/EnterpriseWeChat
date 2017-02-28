@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Title :
+ * Title : Retrofit网络请求公共类
  * Description :
  * Author : Jerry xu    date : 2017/1/11
  * Update :             date :
@@ -17,8 +17,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class RetrofitManager {
 
-    private static final int DEFAULT_TIME_OUT = 5;//超时时间 5s
-    private static final String api = "https://qyapi.weixin.qq.com/cgi-bin/";//微信接口API前缀
+    private static final int    DEFAULT_TIME_OUT = 5;//超时时间 5s
+    private static final String api              = "https://qyapi.weixin.qq.com/cgi-bin/";//微信接口API前缀
     private Retrofit mRetrofit;
 
     //构造是有方法
@@ -39,13 +39,6 @@ public class RetrofitManager {
     }
 
     /**
-     * 创建单例
-     */
-    private static class SingletonHolder {
-        private static final RetrofitManager INSTANCE = new RetrofitManager();
-    }
-
-    /**
      * 获取单例
      */
     public static RetrofitManager getInstance() {
@@ -61,6 +54,13 @@ public class RetrofitManager {
      */
     public <T> T create(Class<T> service) {
         return mRetrofit.create(service);
+    }
+
+    /**
+     * 创建单例
+     */
+    private static class SingletonHolder {
+        private static final RetrofitManager INSTANCE = new RetrofitManager();
     }
 
 

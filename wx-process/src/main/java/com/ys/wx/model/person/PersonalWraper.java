@@ -8,8 +8,10 @@ import java.util.List;
 
 @XStreamAlias("arrResult")
 public class PersonalWraper implements Serializable {
+
     @XStreamImplicit(itemFieldName = "psndocWXVO")
     private List<PersonalForImport> personals;
+
     @XStreamAlias("count")
     private String count;
 

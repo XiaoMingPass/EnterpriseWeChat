@@ -21,23 +21,11 @@ public class PartyListResponse implements Serializable {
         public String name;//部门名称
         public int    parentid;//父亲部门id。根部门为1
         public int    order;//在父部门中的次序值。order值小的排序靠前。
-		@Override
-		public String toString() {
-			return "Department [id=" + id + ", name=" + name + ", parentid=" + parentid + ", order=" + order + "]";
-		}
-    }
 
-/*{
-  "errcode": 0,
-  "errmsg": "ok",
-  "department": [
-    {
-      "id": 1,
-      "name": "YASHA",
-      "parentid": 0,
-      "order": 1
+        @Override
+        public String toString() {
+            return "Department [id=" + id + ", name=" + name + ", parentid=" + parentid + ", order=" + order + "]";
+        }
     }
-  ]
-}*/
 
 }

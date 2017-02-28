@@ -1,15 +1,17 @@
 package com.ys.wx.model.person;
 
-import java.io.Serializable;
-
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.ys.wx.common.BaseModel;
 
+import java.io.Serializable;
+
 /**
- * 企业微信通讯录人员信息
- *
- * @author Jerry xu
- * @date 2017-01-11 16:39:16
+ * Title: 企业微信通讯录人员信息
+ * Description:
+ * Author: Jerry xu
+ * Since: 2017-01-11 16:39:16
+ * Version:1.1.0
+ * Copyright: (c) 二龙湖基地组织  2015 ~ 2016 版权所有
  */
 @XStreamAlias("psndocWXVO")
 public class PersonalForImport extends BaseModel implements Serializable {
@@ -27,7 +29,7 @@ public class PersonalForImport extends BaseModel implements Serializable {
     //账号==身份证号码
     @XStreamAlias("psn_id")
     private String psn_id;
-    
+
     //微信号
     @XStreamAlias("weixinid")
     private String weixinid;
@@ -59,12 +61,12 @@ public class PersonalForImport extends BaseModel implements Serializable {
     private String localoffice;//所在办公地
     private String fullName;//全称
     private String shortName;//简称
-    private int orderNo; //排序号
+    private int    orderNo; //排序号
     private String isvisible;//是否可见
     private String phone;//固定电话
     private String phoneShort;//座机短号
     private String mobileShortNo;//手机短号
-    
+
     public String getDirty() {
         return dirty;
     }
@@ -146,86 +148,86 @@ public class PersonalForImport extends BaseModel implements Serializable {
     }
 
 
-	public String getWeixinid() {
-		return weixinid;
-	}
+    public String getWeixinid() {
+        return weixinid;
+    }
 
-	public void setWeixinid(String weixinid) {
-		this.weixinid = weixinid;
-	}
+    public void setWeixinid(String weixinid) {
+        this.weixinid = weixinid;
+    }
 
-	public String getLocaloffice() {
-		return localoffice;
-	}
+    public String getLocaloffice() {
+        return localoffice;
+    }
 
-	public void setLocaloffice(String localoffice) {
-		this.localoffice = localoffice;
-	}
+    public void setLocaloffice(String localoffice) {
+        this.localoffice = localoffice;
+    }
 
-	public String getFullName() {
-		return fullName;
-	}
+    public String getFullName() {
+        return fullName;
+    }
 
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
 
-	public String getShortName() {
-		return shortName;
-	}
+    public String getShortName() {
+        return shortName;
+    }
 
-	public void setShortName(String shortName) {
-		this.shortName = shortName;
-	}
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
+    }
 
-	public int getOrderNo() {
-		return orderNo;
-	}
+    public int getOrderNo() {
+        return orderNo;
+    }
 
-	public void setOrderNo(int orderNo) {
-		this.orderNo = orderNo;
-	}
+    public void setOrderNo(int orderNo) {
+        this.orderNo = orderNo;
+    }
 
-	public String getIsvisible() {
-		return isvisible;
-	}
+    public String getIsvisible() {
+        return isvisible;
+    }
 
-	public void setIsvisible(String isvisible) {
-		this.isvisible = isvisible;
-	}
+    public void setIsvisible(String isvisible) {
+        this.isvisible = isvisible;
+    }
 
-	public String getPhone() {
-		return phone;
-	}
+    public String getPhone() {
+        return phone;
+    }
 
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
-	public String getMobileShortNo() {
-		return mobileShortNo;
-	}
+    public String getMobileShortNo() {
+        return mobileShortNo;
+    }
 
-	public void setMobileShortNo(String mobileShortNo) {
-		this.mobileShortNo = mobileShortNo;
-	}
+    public void setMobileShortNo(String mobileShortNo) {
+        this.mobileShortNo = mobileShortNo;
+    }
 
-	public String getPhoneShort() {
-		return phoneShort;
-	}
+    public String getPhoneShort() {
+        return phoneShort;
+    }
 
-	public void setPhoneShort(String phoneShort) {
-		this.phoneShort = phoneShort;
-	}
+    public void setPhoneShort(String phoneShort) {
+        this.phoneShort = phoneShort;
+    }
 
-	@Override
-	public String toString() {
-		return "PersonalForImport [dirty=" + dirty + ", status=" + status + ", psn_name=" + psn_name + ", psn_id="
-				+ psn_id + ", weixinid=" + weixinid + ", psn_mobile=" + psn_mobile + ", psn_email=" + psn_email
-				+ ", psn_deptcode=" + psn_deptcode + ", psn_postname=" + psn_postname + ", psn_officephone="
-				+ psn_officephone + ", psn_code=" + psn_code + ", localoffice=" + localoffice + ", fullName=" + fullName
-				+ ", shortName=" + shortName + ", orderNo=" + orderNo + ", isvisible=" + isvisible + ", phone=" + phone
-				+ ", phoneShort=" + phoneShort + ", mobileShortNo=" + mobileShortNo + "]";
-	}
+    @Override
+    public String toString() {
+        return "PersonalForImport [dirty=" + dirty + ", status=" + status + ", psn_name=" + psn_name + ", psn_id="
+                + psn_id + ", weixinid=" + weixinid + ", psn_mobile=" + psn_mobile + ", psn_email=" + psn_email
+                + ", psn_deptcode=" + psn_deptcode + ", psn_postname=" + psn_postname + ", psn_officephone="
+                + psn_officephone + ", psn_code=" + psn_code + ", localoffice=" + localoffice + ", fullName=" + fullName
+                + ", shortName=" + shortName + ", orderNo=" + orderNo + ", isvisible=" + isvisible + ", phone=" + phone
+                + ", phoneShort=" + phoneShort + ", mobileShortNo=" + mobileShortNo + "]";
+    }
 
 }

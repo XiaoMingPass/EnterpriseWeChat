@@ -1,27 +1,16 @@
 package com.ys.wx.utils;
 
 import com.ys.wx.model.wx.request.PartyAndUserRequest;
-import com.ys.wx.model.wx.response.MultiResponse;
-import com.ys.wx.model.wx.response.PartyAndUserResponse;
-import com.ys.wx.model.wx.response.PartyListResponse;
+import com.ys.wx.model.wx.response.*;
 import com.ys.wx.model.wx.response.PartyListResponse.Department;
-import com.ys.wx.model.wx.response.TokenResponse;
-import com.ys.wx.model.wx.response.UserDetailsResponse;
 import com.ys.wx.model.wx.response.UserDetailsResponse.UserlistBean;
-import com.ys.wx.model.wx.response.UserListResponse;
-
 import okhttp3.MultipartBody;
 import retrofit2.Call;
-import retrofit2.http.Body;
-import retrofit2.http.GET;
-import retrofit2.http.Multipart;
-import retrofit2.http.POST;
-import retrofit2.http.Part;
-import retrofit2.http.Query;
+import retrofit2.http.*;
 
 /**
  * Title : 微信API接口
- * Description :
+ * Description : 调用微信Rest服务API
  * Author : Jerry xu    date : 2017/1/3
  * Update :             date :
  * Version : 1.0.0
@@ -54,6 +43,22 @@ public interface ApiService {
             , @Query("type") String type
             , @Part MultipartBody.Part file);
 
+    /**
+     * 验证URL有效性
+     *
+     * @param msg_signature (是)微信加密签名，msg_signature结合了企业填写的token、请求中的timestamp、nonce参数、加密的消息体
+     * @param timestamp     (是)时间戳
+     * @param nonce         (是)随机数
+     * @param echostr       (首次校验时必带)加密的随机字符串，以msg_encrypt格式提供。需要解密并返回echostr明文，解密后有random、msg_len、msg、$CorpID四个字段，其中msg即为echostr明文
+     * @return
+     */
+    @POST("wxpush")
+    Call<PartyAndUserResponse> verifyURL(@Query("msg_signature") String msg_signature
+            , @Query("timestamp") String timestamp
+            , @Query("nonce") String nonce
+            , @Query("echostr") String echostr);
+
+    //*********************************************************===部门===*********************************************************//
 
     /**
      * 覆盖更新部门Party表
@@ -70,53 +75,6 @@ public interface ApiService {
     Call<PartyAndUserResponse> updateParty(@Query("access_token") String access_token
             , @Body PartyAndUserRequest request);
 
-
-    /**
-     * 覆盖更新用户User表(参数说明 {@see updateParty})
-     *
-     * @param access_token
-     * @param request
-     * @return
-     */
-    @POST("batch/replaceuser")
-    Call<PartyAndUserResponse> updateUser(@Query("access_token") String access_token
-            , @Body PartyAndUserRequest request);
-
-    
-    @POST("user/create")
-    public Call<PartyAndUserResponse> addUser(@Query("access_token") String access_token, @Body UserlistBean userlistbean);
-    
-    @POST("user/update")
-    public Call<PartyAndUserResponse> updateUser(@Query("access_token") String access_token, @Body UserlistBean userlistbean);
-    
-
-    /**
-     * 增量更新用户User表(参数说明 {@see updateParty})
-     *
-     * @param access_token
-     * @param request
-     * @return
-     */
-    @POST("batch/syncuser")
-    Call<PartyAndUserResponse> spikeUser(@Query("access_token") String access_token
-            , @Body PartyAndUserRequest request);
-
-    /**
-     * 验证URL有效性
-     *
-     * @param msg_signature (是)微信加密签名，msg_signature结合了企业填写的token、请求中的timestamp、nonce参数、加密的消息体
-     * @param timestamp     (是)时间戳
-     * @param nonce         (是)随机数
-     * @param echostr       (首次校验时必带)	加密的随机字符串，以msg_encrypt格式提供。需要解密并返回echostr明文，解密后有random、msg_len、msg、$CorpID四个字段，其中msg即为echostr明文
-     * @return
-     */
-    @POST("wxpush")
-    Call<PartyAndUserResponse> verifyURL(@Query("msg_signature") String msg_signature
-            , @Query("timestamp") String timestamp
-            , @Query("nonce") String nonce
-            , @Query("echostr") String echostr);
-
-
     /**
      * 获取部门列表
      *
@@ -127,25 +85,36 @@ public interface ApiService {
     @GET("department/list")
     Call<PartyListResponse> getPartyList(@Query("access_token") String access_token,
                                          @Query("id") int id);
+
     /**
      * 创建部门
+     *
      * @param access_token 调用接口凭证
-     * @param id           部门id。获取指定部门及其下的子部门
+     * @param department   对象：
+     *                     name(是)部门名称。长度限制为32个字（汉字或英文字母），字符不能包括\:*?"<>｜
+     *                     parentid(是)父亲部门id。根部门id为1
+     *                     order(否)在父部门中的次序值。order值小的排序靠前。
+     *                     id(否)部门id，整型。指定时必须大于1，不指定时则自动生成
      * @return
      */
     @POST("department/create")
     Call<PartyListResponse> createParty(@Query("access_token") String access_token,
-    		@Body Department department);
-    
+                                        @Body Department department);
+
     /**
      * 更新部门
+     *
      * @param access_token 调用接口凭证
-     * @param id           部门id。获取指定部门及其下的子部门
+     * @param department   对象：
+     *                     id(是)部门id
+     *                     name(否)更新的部门名称。长度限制为32个字（汉字或英文字母），字符不能包括\:*?"<>｜。修改部门名称时指定该参数
+     *                     parentid(否)父亲部门id。根部门id为1
+     *                     order(否)在父部门中的次序值。order值小的排序靠前。
      * @return
      */
     @POST("department/update")
     Call<PartyListResponse> updateParty(@Query("access_token") String access_token,
-    		@Body Department department);
+                                        @Body Department department);
 
     /**
      * 删除部门
@@ -156,7 +125,65 @@ public interface ApiService {
      */
     @GET("department/delete")
     Call<PartyListResponse> deletePartyList(@Query("access_token") String access_token,
-                                        @Query("id") int id);
+                                            @Query("id") int id);
+
+
+    //*********************************************************===人员===*********************************************************//
+
+    /**
+     * 覆盖更新用户User表(参数说明 {@see updateParty})
+     *
+     * @param access_token 调用接口凭证
+     * @param request
+     * @return
+     */
+    @POST("batch/replaceuser")
+    Call<PartyAndUserResponse> updateUser(@Query("access_token") String access_token
+            , @Body PartyAndUserRequest request);
+
+
+    /**
+     * 增量更新用户User表(参数说明 {@see updateParty})
+     *
+     * @param access_token 调用接口凭证
+     * @param request
+     * @return
+     */
+    @POST("batch/syncuser")
+    Call<PartyAndUserResponse> spikeUser(@Query("access_token") String access_token
+            , @Body PartyAndUserRequest request);
+
+    /**
+     * 创建成员
+     *
+     * @param access_token 调用接口凭证
+     * @param request      对象：
+     *                     userid(是)成员UserID。对应管理端的帐号，企业内必须唯一。不区分大小写，长度为1~64个字节
+     *                     name(是)成员名称。长度为1~64个字节
+     *                     department(是)成员所属部门id列表,不超过20个
+     *                     position(否)职位信息。长度为0~64个字节
+     *                     mobile(否)手机号码。企业内必须唯一，mobile/weixinid/email三者不能同时为空
+     *                     gender(否)性别。1表示男性，2表示女性
+     *                     email(否)邮箱。长度为0~64个字节。企业内必须唯一
+     *                     weixinid(否)微信号。企业内必须唯一。（注意：是微信号，不是微信的名字）
+     *                     avatar_mediaid(否)成员头像的mediaid，通过多媒体接口上传图片获得的mediaid
+     *                     extattr(否)扩展属性。扩展属性需要在WEB管理端创建后才生效，否则忽略未知属性的赋值
+     * @return
+     */
+    @POST("user/create")
+    Call<PartyAndUserResponse> addUser(@Query("access_token") String access_token
+            , @Body UserlistBean request);
+
+    /**
+     * 更新成员
+     *
+     * @param access_token 调用接口凭证
+     * @param request
+     * @return
+     */
+    @POST("user/update")
+    Call<PartyAndUserResponse> updateUser(@Query("access_token") String access_token
+            , @Body UserlistBean request);
 
     /**
      * 获取部门成员(列表)
@@ -188,20 +215,16 @@ public interface ApiService {
                                              @Query("fetch_child") int fetch_child,
                                              @Query("status") int status);
 
-    
     /**
      * 删除用户
-     * @param access_token (是)调用接口凭证
+     *
+     * @param access_token 调用接口凭证
      * @param userid       用户id
      * @return
-     * @Description:
-     * @author wangzequan 2017 下午1:37:10
      */
     @GET("user/delete")
     Call<UserDetailsResponse> getDeleteUser(@Query("access_token") String access_token,
-    		@Query("userid") String userid);
-    
-    
-    
+                                            @Query("userid") String userid);
+
 
 }

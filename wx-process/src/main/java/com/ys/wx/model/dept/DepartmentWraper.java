@@ -1,15 +1,17 @@
 package com.ys.wx.model.dept;
 
-import java.io.Serializable;
-import java.util.List;
-
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
+import java.io.Serializable;
+import java.util.List;
+
 @XStreamAlias("arrResult")
 public class DepartmentWraper implements Serializable {
+
     @XStreamImplicit(itemFieldName = "deptWXVO")
     private List<DepartmentForImport> depts;
+
     @XStreamAlias("count")
     private String count;
 

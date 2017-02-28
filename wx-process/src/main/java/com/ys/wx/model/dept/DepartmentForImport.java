@@ -1,15 +1,17 @@
 package com.ys.wx.model.dept;
 
-import java.io.Serializable;
-
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.ys.wx.common.BaseModel;
 
+import java.io.Serializable;
+
 /**
- * 企业微信通讯录部门结构信息Bean
- *
- * @author Jerry xu
- * @date 2017-01-11 16:39:16
+ * Title: 企业微信通讯录部门结构信息Bean
+ * Description:
+ * Author: Jerry xu
+ * Since: 2017-01-11 16:39:16
+ * Version:1.1.0
+ * Copyright: (c) 二龙湖基地组织  2015 ~ 2016 版权所有
  */
 @XStreamAlias("deptWXVO")
 public class DepartmentForImport extends BaseModel implements Serializable {

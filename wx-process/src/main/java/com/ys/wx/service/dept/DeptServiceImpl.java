@@ -1,25 +1,25 @@
 package com.ys.wx.service.dept;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.apache.log4j.Logger;
-import org.springframework.stereotype.Service;
-
 import com.ys.wx.model.dept.DepartmentForImport;
 import com.ys.wx.model.dept.DepartmentWraper;
 import com.ys.wx.service.deptandperson.IQueryInfoWXService;
 import com.ys.wx.service.deptandperson.IQueryInfoWXServicePortType;
 import com.ys.wx.utils.XStreamUtil;
 import com.ys.wx.vo.ReturnVo;
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
- *  部门服务实现
- * @author wangzequan
- *@Copyright:Copyright (c) 二龙湖基地组织  2015 ~ 2016 版权所有
+ * Title : 部门服务实现
+ * Description :
+ * Author : Ceaser wang Jerry xu    date : 2017/1/12
+ * Update :                         date :
+ * Version : 1.0.0
+ * Copyright (c) 二龙湖基地组织  2016 ~ 2017 版权所有
  */
-
 @Service
 public class DeptServiceImpl implements IDeptService {
 
