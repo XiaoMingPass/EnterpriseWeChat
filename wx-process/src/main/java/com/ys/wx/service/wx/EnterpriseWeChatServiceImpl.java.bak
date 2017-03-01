@@ -88,12 +88,6 @@ public class EnterpriseWeChatServiceImpl implements IEnterpriseWeChatService {
                             updateList.add(department);
                         }
                     } else {
-                    		Department adddepartment = new PartyListResponse().new Department();
-												adddepartment.id =  Integer.valueOf(departmentitem.getDept_id());
-												adddepartment.name = departmentitem.getDept_name();
-												adddepartment.parentid = Integer.valueOf(CommUtils.defaultIfEmpty(departmentitem.getDept_fid(), "99999")) ;
-												adddepartment.order = Integer.valueOf(CommUtils.defaultIfEmpty(departmentitem.getDept_order(), "0"));
-												addlist.add(adddepartment);
                         addList.add(department);
                     }
                 }
