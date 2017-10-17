@@ -1,0 +1,27 @@
+CREATE TABLE `tbl_fran_dictionarytype` (
+   `id` VARCHAR(32) COLLATE utf8_bin NOT NULL COMMENT '主键id',
+   `type_code` VARCHAR(32) COLLATE utf8_bin DEFAULT NULL COMMENT '类型编码',
+   `type_name` VARCHAR(256) COLLATE utf8_bin DEFAULT NULL COMMENT '类型名称',
+   `remark` VARCHAR(1000) COLLATE utf8_bin DEFAULT NULL,
+   `create_time` DATETIME DEFAULT NULL COMMENT '创建时间',
+   PRIMARY KEY (`id`)
+)
+  ENGINE = INNODB
+  DEFAULT CHARSET = utf8
+  COLLATE = utf8_bin
+  CHECKSUM = 1
+  DELAY_KEY_WRITE = 1
+  ROW_FORMAT = DYNAMIC
+  COMMENT = '字典数据类型';
+
+
+ CREATE TABLE `tbl_fran_dictionary` (
+   `id` VARCHAR(32) COLLATE utf8_bin NOT NULL COMMENT '主键id',
+   `name` VARCHAR(256) COLLATE utf8_bin DEFAULT NULL COMMENT '名称',
+   `code` VARCHAR(32) COLLATE utf8_bin DEFAULT NULL COMMENT '编码',
+   `type_code` VARCHAR(32) COLLATE utf8_bin DEFAULT NULL COMMENT '字典数据类型编码',
+   `sort_no` INT(11) DEFAULT NULL COMMENT '排序序号',
+   `remark` LONGTEXT COLLATE utf8_bin COMMENT '备注',
+   `create_time` TIMESTAMP NULL DEFAULT NULL COMMENT '创建时间',
+   PRIMARY KEY (`id`)
+ ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_bin CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC COMMENT='数据字典表'

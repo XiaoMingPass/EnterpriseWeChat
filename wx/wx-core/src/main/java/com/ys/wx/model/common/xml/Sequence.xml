@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="SequenceXML" >
+    <resultMap id="SequenceMap" type="sequence" >
+        <id column="seq_name" property="seqName" jdbcType="VARCHAR" />
+        
+        
+        <result column="current_val" property="currentVal" jdbcType="INTEGER" />
+        
+        <result column="increment_val" property="incrementVal" jdbcType="INTEGER" />
+        <result column="next" property="next" jdbcType="INTEGER" />
+    </resultMap>
+    
+    <sql id="Base_Column_List" >
+        seq_name,
+        current_val,
+        increment_val
+    </sql>
+    
+    <sql id="where">
+        <if test="seqName != null and seqName != ''">
+        and seq_name = #{seqName,jdbcType=VARCHAR}
+        </if>
+        <if test="currentVal != null">
+        and current_val = #{currentVal,jdbcType=INTEGER}
+        </if>
+        <if test="incrementVal != null">
+        and increment_val = #{incrementVal,jdbcType=INTEGER}
+        </if>
+		<!--
+		<if test="startTime!=null and startTime!=''">
+        and create_time <![CDATA[>=]]> #{startTime,jdbcType=VARCHAR}
+        </if>
+        <if test="endTime!=null and endTime!=''">
+        and create_time <![CDATA[<=]]> #{endTime,jdbcType=VARCHAR}
+        </if>
+		 -->
+    </sql>
+    
+    <select id="next" resultType="java.lang.String" parameterType="java.lang.String" flushCache="true" useCache="false">
+       select nextval(#{seqNames,jdbcType=VARCHAR}) as next
+    </select>
+    
+    <select id="getSequenceBySeq_name" resultMap="SequenceMap" parameterType="java.lang.String" >
+        select 
+        <include refid="Base_Column_List" />
+        from sequence
+        where seq_name = #{seqName,jdbcType=VARCHAR}
+    </select>
+    
+    <select id="getSequenceBySeq_names" resultMap="SequenceMap" parameterType="java.lang.String" >
+        select 
+        <include refid="Base_Column_List" />
+        from sequence
+        where seq_name in(${seqNames}) 
+    </select>
+    
+    <select id="getSequenceBySeq_namesList" resultMap="SequenceMap" parameterType="java.util.List" >
+        select 
+        <include refid="Base_Column_List" />
+        from sequence
+        where seq_name in
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")" >  
+	        #{item}
+	    </foreach>
+    </select>
+    
+    <select id="getAll" parameterType="sequence" resultMap="SequenceMap">
+        select <include refid="Base_Column_List"/> from sequence where 1=1 
+        <include refid="where" />
+    </select>
+    
+    <select id="getPagerModelByQuery" parameterType="sequence" resultMap="SequenceMap">
+        select <include refid="Base_Column_List"/> from sequence where 1=1 
+        <include refid="where" />
+    </select>
+    
+    <select id="getByPageCount" parameterType="sequence" resultType="int">
+        select count(1) from sequence where 1=1 
+        <include refid="where" />
+    </select>
+   
+    <insert id="insertSequence" parameterType="sequence" >
+        insert into sequence (<include refid="Base_Column_List" />)
+        values (
+        #{seqName,jdbcType=VARCHAR},
+        #{currentVal,jdbcType=INTEGER},
+        #{incrementVal,jdbcType=INTEGER}
+        )
+    </insert>
+    
+    <insert id="insertSequenceBatch" parameterType="java.util.List">
+        insert into sequence (<include refid="Base_Column_List" />)
+        values 
+        <foreach collection="list" item="item" index="index" separator="," >  
+	        (
+	        #{item.seqName,jdbcType=VARCHAR},
+	        #{item.currentVal,jdbcType=INTEGER},
+	        #{item.incrementVal,jdbcType=INTEGER}
+	        )
+        </foreach>
+    </insert>
+    
+    <delete id="delSequenceBySeq_name" parameterType="java.lang.String" >
+        delete from sequence
+        where seq_name = #{seqName,jdbcType=VARCHAR}
+    </delete>
+    
+    <delete id="delSequenceBySeq_names" parameterType="java.lang.String" >
+        delete from sequence
+        where seq_name in(${seqNames}) 
+    </delete>
+    
+    <delete id="delSequenceBySeq_namesList" parameterType="java.util.List" >
+        delete from sequence
+        where seq_name in
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")" >  
+	        #{item}
+	    </foreach>
+    </delete>
+    
+    <update id="updateSequence" parameterType="sequence" >
+        update sequence
+        <set>
+            <if test="seqName != null" >
+                seq_name = #{seqName,jdbcType=VARCHAR},
+            </if>
+            <if test="currentVal != null" >
+                current_val = #{currentVal,jdbcType=INTEGER},
+            </if>
+            <if test="incrementVal != null" >
+                increment_val = #{incrementVal,jdbcType=INTEGER}
+            </if>
+        </set>
+        where seq_name = #{seqName,jdbcType=VARCHAR}
+    </update>
+    
+    <update id="updateSequenceBySeq_names" parameterType="java.util.Map">
+        update sequence
+        <set>
+            <if test="sequence.seqName != null" >
+                seq_name = #{sequence.seqName,jdbcType=VARCHAR},
+            </if>
+            <if test="sequence.currentVal != null" >
+                current_val = #{sequence.currentVal,jdbcType=INTEGER},
+            </if>
+            <if test="sequence.incrementVal != null" >
+                increment_val = #{sequence.incrementVal,jdbcType=INTEGER}
+            </if>
+        </set>
+        where seq_name in(${seqNames}) 
+    </update>
+    
+    <update id="updateSequenceBySeq_namesList" parameterType="java.util.Map">
+        update sequence
+        <set>
+            <if test="sequence.seqName != null" >
+                seq_name = #{sequence.seqName,jdbcType=VARCHAR},
+            </if>
+            <if test="sequence.currentVal != null" >
+                current_val = #{sequence.currentVal,jdbcType=INTEGER},
+            </if>
+            <if test="sequence.incrementVal != null" >
+                increment_val = #{sequence.incrementVal,jdbcType=INTEGER}
+            </if>
+        </set>
+        where seq_name in
+        <foreach collection="seqNames" item="item" index="index" open="(" separator="," close=")" >  
+	        #{item}
+	    </foreach>
+    </update>
+    
+    <update id="updateSequenceList" parameterType="java.util.List">
+    	<foreach collection="list" item="item" index="index" open="" close=";" separator=";">
+		        update sequence
+		        <set>
+		            <if test="item.seqName != null" >
+		                seq_name = #{item.seqName,jdbcType=VARCHAR},
+		            </if>
+		            <if test="item.currentVal != null" >
+		                current_val = #{item.currentVal,jdbcType=INTEGER},
+		            </if>
+		            <if test="item.incrementVal != null" >
+		                increment_val = #{item.incrementVal,jdbcType=INTEGER}
+		            </if>
+		        </set>
+		        where seq_name = #{item.seqName,jdbcType=VARCHAR}
+	     </foreach>
+    </update>
+    
+</mapper>

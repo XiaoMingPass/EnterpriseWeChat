@@ -1,0 +1,1 @@
+<#macro url url >${usermanager}${url}</#macro>

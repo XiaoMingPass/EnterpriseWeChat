@@ -1,0 +1,41 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.ys</groupId>
+    <artifactId>wx</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>wx</name>
+    <url>http://maven.apache.org</url>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <modules>
+        <module>wx-api</module>
+        <module>wx-core</module>
+        <module>wx-manager</module>
+        <module>wx-front</module>
+    </modules>
+    	<!-- 部署远程maven仓库里面 -->
+	<distributionManagement>
+	<repository>
+			<id>releases</id>
+			<name>Nexus Release Repository</name>
+			<url>http://10.10.20.210:8044/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<name>Nexus Snapshot Repository</name>
+			<url>http://10.10.20.210:8044/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+</project>
