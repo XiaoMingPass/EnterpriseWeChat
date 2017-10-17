@@ -44,6 +44,7 @@
 注意：该方案，适用于`原历史数据与新数据相差比较大`
 
 ##### 数据库设计
+```sql
 CREATE TABLE `tbl_wx_syn_data_record` (
    `id` varchar(32) COLLATE utf8_bin NOT NULL DEFAULT '' COMMENT 'ID',
    `type` int(2) DEFAULT NULL COMMENT '类型 (1)',
@@ -53,13 +54,14 @@ CREATE TABLE `tbl_wx_syn_data_record` (
    `operate_time` datetime DEFAULT NULL COMMENT '操作时间',
    PRIMARY KEY (`id`)
  ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='数据同步记录表'
- 
+ ```
  日常从外部数据拉取数据是增量方式（调度任务），在此工程外部数据的场景是每天从其他系统根据时间拉取数据，本次开始时间(start_time)即上次的结束时间(end_time)。
  
 二、第二期
 
 第一个版本与2.0版本切换步骤：
 第一步，数据表初始化：
+```sql
 CREATE TABLE `tbl_wx_company` (
 `id` varchar(32) COLLATE utf8_bin NOT NULL COMMENT '编码',
 `pid` varchar(32) COLLATE utf8_bin DEFAULT NULL COMMENT '父级编码',
@@ -73,7 +75,8 @@ CREATE TABLE `tbl_wx_company` (
 `update_time` datetime DEFAULT NULL,
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
+```
+```sql
 CREATE TABLE `tbl_wx_department` (
 `id` varchar(32) COLLATE utf8_bin NOT NULL COMMENT '编码',
 `pid` varchar(32) COLLATE utf8_bin DEFAULT NULL COMMENT '父级编码',
@@ -88,7 +91,8 @@ CREATE TABLE `tbl_wx_department` (
 `update_time` datetime DEFAULT NULL,
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
+```
+```sql
 CREATE TABLE `tbl_wx_person` (
 `id` varchar(32) COLLATE utf8_bin NOT NULL COMMENT '主键',
 `name` varchar(32) COLLATE utf8_bin DEFAULT NULL COMMENT '姓名',
@@ -116,19 +120,20 @@ CREATE TABLE `tbl_wx_person` (
 `update_time` datetime DEFAULT NULL,
 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
+```
 --  唯一索引 `no`
-
+```sql
 CREATE TABLE `sequence` (
 `seq_name` varchar(50) COLLATE utf8_bin NOT NULL,
 `current_val` int(11) NOT NULL,
 `increment_val` int(11) NOT NULL DEFAULT '1',
 PRIMARY KEY (`seq_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
-
+```
+```sql
 INSERT INTO sequence(seq_name,current_val,increment_val)  VALUES('GLOBAL',1,1);
-
+```
+```sql
 create function currval(v_seq_name VARCHAR(50))   
 returns integer  
 begin      
@@ -137,18 +142,18 @@ begin
 	select current_val into value  from sequence where seq_name = v_seq_name; 
    return value; 
 end;
-
+```
+```sql
 create function nextval (v_seq_name VARCHAR(50))
 	returns integer
 begin
     update sequence set current_val = current_val + increment_val  where seq_name = v_seq_name;
 	return currval(v_seq_name);
 end;
-
-
+```
 
 第二步：
-正式环境建立mq队列: ys.wechat.userdepartcompany.queue
+正式环境建立mq队列: `ys.wechat.userdepartcompany.queue`
 mq队列监听地址改为正式环境地址，本地数据库改为正式环境数据库，即将工程配置改为正式环境配置。
 全量拉取MDM数据：
 
@@ -160,11 +165,10 @@ mq队列监听地址改为正式环境地址，本地数据库改为正式环境
 设置公司表【亚厦控股】的pcode为1.
 紧接着是部门和人员的同步。
 
-
-第四步：运行FirstPollMDMDataProgress.useTempDeptUseFile做首次切换。
+第四步：运行`FirstPollMDMDataProgress.useTempDeptUseFile`做首次切换。
 
 第五步：
-com.ys.wx.api.impl.WxJobApiImpl.processLocalToWeiXin()作为后台调度，每天调度一次，作用是将一天积累的修改同步到微信企业公众号上去。
+`com.ys.wx.api.impl.WxJobApiImpl.processLocalToWeiXin()`作为后台调度，每天调度一次，作用是将一天积累的修改同步到微信企业公众号上去。
 
 
 
