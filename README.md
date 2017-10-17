@@ -57,8 +57,120 @@ CREATE TABLE `tbl_wx_syn_data_record` (
  日常从外部数据拉取数据是增量方式（调度任务），在此工程外部数据的场景是每天从其他系统根据时间拉取数据，本次开始时间(start_time)即上次的结束时间(end_time)。
  
 二、第二期
-* 数据自动同步，并清理已离职人员
-* 数据同步完成，并发送消息给管理员，通知同步结果
 
-稍后上传源码
+第一个版本与2.0版本切换步骤：
+第一步，数据表初始化：
+CREATE TABLE `tbl_wx_company` (
+`id` varchar(32) COLLATE utf8_bin NOT NULL COMMENT '编码',
+`pid` varchar(32) COLLATE utf8_bin DEFAULT NULL COMMENT '父级编码',
+`code` varchar(32) COLLATE utf8_bin DEFAULT NULL COMMENT '编号',
+`pcode` varchar(32) COLLATE utf8_bin DEFAULT NULL COMMENT '父级编号',
+`name` varchar(32) COLLATE utf8_bin DEFAULT NULL COMMENT '名称',
+`order_no` varchar(16) COLLATE utf8_bin DEFAULT NULL COMMENT '排序',
+`del_flag` int(1) DEFAULT NULL COMMENT '删除状态(0:未删除;1:已删除)',
+`syn` int(1) DEFAULT NULL COMMENT '是否修改(0:未修改;1:已修改)',
+`create_time` datetime DEFAULT NULL,
+`update_time` datetime DEFAULT NULL,
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+CREATE TABLE `tbl_wx_department` (
+`id` varchar(32) COLLATE utf8_bin NOT NULL COMMENT '编码',
+`pid` varchar(32) COLLATE utf8_bin DEFAULT NULL COMMENT '父级编码',
+`company_id` varchar(32) COLLATE utf8_bin DEFAULT NULL COMMENT '公司id',
+`code` varchar(32) COLLATE utf8_bin DEFAULT NULL COMMENT '编号',
+`pcode` varchar(32) COLLATE utf8_bin DEFAULT NULL COMMENT '父级编号',
+`name` varchar(32) COLLATE utf8_bin DEFAULT NULL COMMENT '名称',
+`order_no` varchar(16) COLLATE utf8_bin DEFAULT NULL COMMENT '排序',
+`del_flag` int(1) DEFAULT NULL COMMENT '删除状态(0:未删除;1:已删除)',
+`syn` int(1) DEFAULT NULL COMMENT '是否修改(0:未修改;1:已修改)',
+`create_time` datetime DEFAULT NULL,
+`update_time` datetime DEFAULT NULL,
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+CREATE TABLE `tbl_wx_person` (
+`id` varchar(32) COLLATE utf8_bin NOT NULL COMMENT '主键',
+`name` varchar(32) COLLATE utf8_bin DEFAULT NULL COMMENT '姓名',
+`idcard` varchar(18) COLLATE utf8_bin DEFAULT NULL COMMENT '账号',
+`sex` varchar(1) COLLATE utf8_bin DEFAULT NULL COMMENT '性别',
+`weixin` varchar(32) COLLATE utf8_bin DEFAULT NULL COMMENT '微信号',
+`mobile` varchar(32) COLLATE utf8_bin DEFAULT NULL COMMENT '手机号',
+`email` varchar(32) COLLATE utf8_bin DEFAULT NULL COMMENT '邮箱',
+`company_id` varchar(32) COLLATE utf8_bin DEFAULT NULL COMMENT '所在公司编码',
+`dept_id` varchar(32) COLLATE utf8_bin DEFAULT NULL COMMENT '所在部门编码',
+`dept_code` varchar(32) COLLATE utf8_bin DEFAULT NULL COMMENT '所在部门',
+`position` varchar(32) COLLATE utf8_bin DEFAULT NULL COMMENT '职位',
+`office_addr` varchar(32) COLLATE utf8_bin DEFAULT NULL COMMENT '所在办公室',
+`full_name` varchar(32) COLLATE utf8_bin DEFAULT NULL COMMENT '全称',
+`short_name` varchar(16) COLLATE utf8_bin DEFAULT NULL COMMENT '简称',
+`order_no` int(12) DEFAULT NULL COMMENT '排序号',
+`is_visable` varchar(8) COLLATE utf8_bin DEFAULT NULL COMMENT '是否可见',
+`phone` varchar(18) COLLATE utf8_bin DEFAULT NULL COMMENT '固定电话',
+`short_phone` varchar(9) COLLATE utf8_bin DEFAULT NULL COMMENT '座机短号',
+`no` varchar(32) COLLATE utf8_bin DEFAULT NULL COMMENT '工号',
+`short_mobile` varchar(32) COLLATE utf8_bin DEFAULT NULL COMMENT '手机短号',
+`syn` int(1) DEFAULT NULL COMMENT '是否修改(0:未修改;1:已修改)',
+`del_flag` int(1) DEFAULT NULL COMMENT '删除状态(0:删除;1:未删除)',
+`create_time` datetime DEFAULT NULL,
+`update_time` datetime DEFAULT NULL,
+PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--  唯一索引 `no`
+
+CREATE TABLE `sequence` (
+`seq_name` varchar(50) COLLATE utf8_bin NOT NULL,
+`current_val` int(11) NOT NULL,
+`increment_val` int(11) NOT NULL DEFAULT '1',
+PRIMARY KEY (`seq_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+
+INSERT INTO sequence(seq_name,current_val,increment_val)  VALUES('GLOBAL',1,1);
+
+create function currval(v_seq_name VARCHAR(50))   
+returns integer  
+begin      
+	declare value integer;       
+	set value = 0;       
+	select current_val into value  from sequence where seq_name = v_seq_name; 
+   return value; 
+end;
+
+create function nextval (v_seq_name VARCHAR(50))
+	returns integer
+begin
+    update sequence set current_val = current_val + increment_val  where seq_name = v_seq_name;
+	return currval(v_seq_name);
+end;
+
+
+
+第二步：
+正式环境建立mq队列: ys.wechat.userdepartcompany.queue
+mq队列监听地址改为正式环境地址，本地数据库改为正式环境数据库，即将工程配置改为正式环境配置。
+全量拉取MDM数据：
+
+第三步、
+去掉代码里边的200条限制。（FirstPollMDMDataProgress line :469）
+启动微信工程监听队列，在MDM做全量下发。
+首先是公司，
+
+设置公司表【亚厦控股】的pcode为1.
+紧接着是部门和人员的同步。
+
+
+第四步：运行FirstPollMDMDataProgress.useTempDeptUseFile做首次切换。
+
+第五步：
+com.ys.wx.api.impl.WxJobApiImpl.processLocalToWeiXin()作为后台调度，每天调度一次，作用是将一天积累的修改同步到微信企业公众号上去。
+
+
+
+
+
+
+
+
 
